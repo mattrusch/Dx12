@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Window.h"
+#include "Camera.h"
 
 namespace Vnm
 {
@@ -17,7 +18,9 @@ namespace Vnm
         void Mainloop();
         void Shutdown();
 
+        void OnKeyDown(UINT8 key);
     private:
         Window mWindow;
+        Camera mCamera;
     };
 }

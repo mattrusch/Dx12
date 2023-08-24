@@ -4,7 +4,7 @@
 
 #include <DirectXMath.h>
 
-namespace vnm
+namespace Vnm
 {
 
     class Camera
@@ -32,6 +32,7 @@ namespace vnm
         void Pitch(float radians);
         void Yaw(float radians);
         void MoveForward(float delta);
+        void SetPosition(const DirectX::XMVECTOR& position) { mPosition = position; }
 
     private:
         DirectX::XMVECTOR mPosition;

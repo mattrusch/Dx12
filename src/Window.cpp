@@ -1,10 +1,12 @@
 // Window.cpp
 
 #include "Window.h"
+#include "Application.h"
+#include <cassert>
 
 LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
-    void* pWindow = (void*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+    Vnm::Window* pWindow = reinterpret_cast<Vnm::Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
     switch (message)
     {
@@ -17,6 +19,12 @@ LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM l
             PostQuitMessage(0);
             return 0;
         }
+
+        if (pWindow != nullptr)
+        {
+            pWindow->OnKeyDown(static_cast<UINT8>(wparam));
+        }
+
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -32,6 +40,9 @@ namespace Vnm
 {
     void Window::Create(HINSTANCE instance, int cmdShow, const WindowDesc& desc)
     {
+        assert(desc.mParentApplication != nullptr);
+        mApplication = desc.mParentApplication;
+
         WNDCLASSEX wndClass = {0};
         wndClass.cbSize = sizeof(WNDCLASSEX);
         wndClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
@@ -59,6 +70,15 @@ namespace Vnm
         DWORD error = GetLastError();
 
         ShowWindow(mHandle, cmdShow);
+    }
+
+    void Window::OnKeyDown(UINT8 key)
+    {
+        // Forward to application
+        if (mApplication != nullptr)
+        {
+            mApplication->OnKeyDown(key);
+        }
     }
 
     void Window::Destroy()

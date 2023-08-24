@@ -5,15 +5,17 @@
 
 namespace Vnm
 {
-    void Application::Startup( HINSTANCE instance, int cmdShow )
+    void Application::Startup(HINSTANCE instance, int cmdShow)
     {
         // Create main window and device
         Window::WindowDesc winDesc;
         winDesc.mWidth = 1024;
         winDesc.mHeight = 1024;
-        mWindow.Create( instance, cmdShow, Vnm::Window::WindowDesc() );
+        winDesc.mParentApplication = this;
+        mWindow.Create(instance, cmdShow, winDesc);
 
-        Init( mWindow.GetHandle() );
+        Init(mWindow.GetHandle());
+        mCamera.SetPosition(DirectX::XMVectorSet(0.0f, 0.0f, -4.0f, 0.0f));
     }
 
     void Application::Mainloop()
@@ -23,12 +25,41 @@ namespace Vnm
         lastTime = GetTickCount();
         float elapsedSeconds = static_cast<float>(elapsedTime) * 0.001f;
 
-        Update(elapsedSeconds);
+        Update( mCamera.CalcLookAt(), elapsedSeconds );
         Render();
     }
 
     void Application::Shutdown()
     {
         mWindow.Destroy();
+    }
+
+    void Application::OnKeyDown(UINT8 key)
+    {
+        const float rotationScale = 0.01f;
+        const float forwardScale = 0.1f;
+
+        switch (key)
+        {
+        case VK_SPACE:
+            mCamera.MoveForward(forwardScale);
+            break;
+        case VK_SHIFT:
+            mCamera.MoveForward(-forwardScale);
+            break;
+        case VK_LEFT:
+            mCamera.Yaw( -DirectX::XM_PI * rotationScale );
+            break;
+        case VK_RIGHT:
+            mCamera.Yaw( DirectX::XM_PI * rotationScale );
+            break;
+        case VK_UP:
+            mCamera.Pitch( DirectX::XM_PI * rotationScale );
+            break;
+        case VK_DOWN:
+            mCamera.Pitch( -DirectX::XM_PI * rotationScale );
+            break;
+        default: break;
+        }
     }
 }

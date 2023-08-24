@@ -540,13 +540,13 @@ void InitAssets()
     WaitForPreviousFrame();
 }
 
-void Update(float elapsedSeconds)
+void Update(const DirectX::XMMATRIX& lookAt, float elapsedSeconds)
 {
     static float totalRotation = 0.0f;
     totalRotation += elapsedSeconds * 0.5f;
 
     DirectX::XMMATRIX matRotation = DirectX::XMMatrixRotationY(totalRotation);
-    DirectX::XMMATRIX matLookAt = DirectX::XMMatrixLookAtLH({ 0.0f, 1.0f, -4.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f });
+    DirectX::XMMATRIX matLookAt = lookAt; // DirectX::XMMatrixLookAtLH({ 0.0f, 1.0f, -4.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f });
     DirectX::XMMATRIX matPerspective = DirectX::XMMatrixPerspectiveFovLH(1.0f, static_cast<float>(gWidth) / static_cast<float>(gHeight), 0.1f, 10.0f);
 
     // CB for first instance

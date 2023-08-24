@@ -9,6 +9,8 @@ LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM l
 
 namespace Vnm
 {
+    class Application;
+
     class Window
     {
     public:
@@ -18,19 +20,22 @@ namespace Vnm
         class WindowDesc
         {
         public:
-            int      mTop     = 100;
-            int      mLeft    = 100;
-            int      mWidth   = 1024;
-            int      mHeight  = 1024;
-            LPCWSTR  mpTitle  = L"Vnm Window";
-            WNDPROC  mWndProc = DefaultWndProc;
+            int          mTop = 100;
+            int          mLeft = 100;
+            int          mWidth = 1024;
+            int          mHeight = 1024;
+            LPCWSTR      mpTitle = L"Vnm Window";
+            WNDPROC      mWndProc = DefaultWndProc;
+            Application* mParentApplication = nullptr;
         };
 
         void Create(HINSTANCE instance, int cmdShow, const WindowDesc& desc);
         void Destroy();
+        void OnKeyDown(UINT8 key);
 
         HWND GetHandle() const { return mHandle; }
     private:
-        HWND mHandle;
+        Application* mApplication;  // For messaging
+        HWND         mHandle;
     };
 }

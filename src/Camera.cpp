@@ -2,13 +2,12 @@
 
 #include "Camera.h"
 
-namespace vnm
+namespace Vnm
 {
     // Calculates and returns LookAt matrix
     DirectX::XMMATRIX Camera::CalcLookAt() const
     {
-        // TODO
-        DirectX::XMMATRIX result = DirectX::XMMatrixIdentity();
+        DirectX::XMMATRIX result = DirectX::XMMatrixLookAtLH(mPosition, DirectX::XMVectorAdd(mPosition, mForward), mUp);
         return result;
     }
 
@@ -21,9 +20,11 @@ namespace vnm
 
     void Camera::Yaw(float radians)
     {
-        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationAxis(mUp, radians);
+//        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationAxis(mUp, radians);
+        DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationAxis(DirectX::XMVectorSet(0.0f, 1.0, 0.0f, 0.0f), radians);
         mForward = DirectX::XMVector3Transform(mForward, rotation);
         mRight = DirectX::XMVector3Transform(mRight, rotation);
+        mUp = DirectX::XMVector3Transform(mUp, rotation);
     }
 
     // Moves camera in direction of forward vector
